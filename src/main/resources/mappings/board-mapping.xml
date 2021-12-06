@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- mapper DTD 선언 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- mapper자체가 DAO 분리되어 나온 개념이기 때문에 namespace는 DAO명을 따라가는 경우가 일반적임 -->
+<mapper namespace="BoardDAO">
+
+   <insert id="insertBoard">
+      <![CDATA[
+      INSERT INTO BOARD(
+                     SEQ
+                    , TITLE
+                    , WRITER
+                    , CONTENT
+                    , CATEGORY
+                   )
+              VALUES(
+                       (SELECT IFNULL(MAX(SEQ), 0) + 1 FROM BOARD A)
+                      , #{title}
+                      , #{writer}
+                      , #{content}
+                      , #{category}
+                    ) 
+      ]]>
+   </insert>
+   
+   <update id="updateBoard">
+      <![CDATA[
+      UPDATE BOARD
+         SET 
+            TITLE = #{title}
+           , CONTENT = #{content}
+          
+            WHERE SEQ = #{seq}
+      ]]>
+   </update>
+   
+   <delete id="deleteBoard">
+      <![CDATA[
+      DELETE FROM BOARD
+         WHERE SEQ = #{seq}
+      ]]>
+   </delete>
+   
+   <select id="getBoard" resultType="board">
+      <![CDATA[
+      SELECT * FROM BOARD
+         WHERE SEQ = #{seq}
+      ]]> 
+   </select>
+   <select id="getBoardCategory" resultType="board">
+      <![CDATA[
+      SELECT * FROM BOARD
+         WHERE category = #{category}
+      ]]> 
+   </select>
+   
+   <select id="getBoardList" resultType="board">
+      <![CDATA[
+      SELECT * FROM BOARD ORDER BY SEQ DESC 
+      ]]> 
+   <!--    WHERE 1 = 1
+         <if test="searchCondition == 'TITLE'">
+            AND TITLE LIKE '%' || #{searchKeyword} || '%'
+         </if>
+         <if test="searchCondition == 'CONTENT'">
+            AND CONTENT LIKE '%' || #{searchKeyword} || '%'
+         </if>
+         ORDER BY SEQ DESC -->   
+   </select>
+      <select id="getMyBoardList" resultType="board">
+      <![CDATA[
+      SELECT * FROM BOARD
+      WHERE WRITER = #{writer}
+      ]]> 
+   
+   </select>
+   
+   <select id="getBoardSeq" resultType="int">
+      SELECT IFNULL(MAX(SEQ) ,0) + 1
+         FROM BOARD
+   </select>
+   
+   <insert id="insertBoardFileList" parameterType="boardFile">
+      INSERT INTO BOARD_FILE (
+                           SEQ,
+                           F_SEQ,
+                           ORIGINAL_FILE_NAME,
+                           FILE_PATH,
+                           FILE_SIZE
+                        )
+                  VALUES (
+                           #{seq},
+                           (
+                              SELECT IFNULL(MAX(F_SEQ), 0) + 1
+                                 FROM BOARD_FILE A
+                              WHERE SEQ = #{seq} 
+                           ),
+                           #{originalFileName},
+                           #{filePath},
+                           #{fileSize}
+                        )
+   </insert>
+   
+      <!-- 파일 1개만 넣기 -->
+   <select id="getBoardFileList" parameterType="int" resultType="boardFile">
+      SELECT * FROM BOARD_FILE
+         WHERE SEQ = #{seq}
+          AND F_SEQ = (SELECT MAX(F_SEQ) FROM BOARD_FILE A WHERE SEQ = #{seq}) 
+   </select>
+   
+   <delete id="deleteBoardFile" parameterType="boardFile">
+      DELETE FROM BOARD_FILE
+         WHERE SEQ = #{seq}
+           AND F_SEQ = #{fSeq}
+   </delete>
+   
+   <delete id="deleteBoardFileList" parameterType="int">
+      DELETE FROM BOARD_FILE
+         WHERE SEQ = #{seq}
+   </delete>
+   
+   <select id="freeCommentList" resultType="freeComment">
+      <![CDATA[
+      SELECT * FROM freeboard_comment
+      WHERE SEQ = #{seq}
+   
+         
+      ]]> 
+   </select>
+   
+   
+   <insert id="insertBoardComment" parameterType="freeComment">
+      <![CDATA[
+      INSERT INTO freeboard_comment(
+                     FM_SEQ
+                    , SEQ
+                    , FM_COMMENT
+                    , FM_NICKNAME
+                   )
+              VALUES(   
+                        (SELECT IFNULL (MAX(FM_SEQ), 0) + 1 FROM FREEBOARD_COMMENT A)
+                      ,   #{seq}
+                      , #{fmComment}
+                      , #{fmNickname}
+                    ) 
+      ]]>
+   </insert>
+      <update id="updateCnt">
+   
+   <![CDATA[
+      UPDATE BOARD
+         SET 
+            CNT =  CNT + 1
+            WHERE SEQ = #{seq}
+      ]]>
+   
+   </update>
+   
+      <delete id="deleteComment" parameterType="int">
+      DELETE FROM freeboard_comment
+         WHERE FM_SEQ = #{fmSeq}
+   </delete>
+   
+</mapper>

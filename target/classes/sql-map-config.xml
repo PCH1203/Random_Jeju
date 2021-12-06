@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<settings>
+		<!-- 카멜케이스 옵션 설정 : 매퍼에서 들고온 데이터 결과값을 자바객체와 매핑 할 때 자동으로 카멜 케이스 표기법으로 매핑 
+			ex) ORIGINAL_FILE_NAME -> originalfileName -->
+		<setting name="mapUnderscoreToCamelCase" value="true" />
+	</settings>
+	<!-- Alias 설정 -->
+	<typeAliases>
+		<typeAlias type="com.springbook.biz.trip.TripVO" alias="trip"/>
+		<typeAlias type="com.springbook.biz.trip.TripFileVO" alias="tripFile"/>
+		<typeAlias type="com.springbook.biz.trip.TripMemberVO" alias="tripMember"/>
+
+		<typeAlias type="com.springbook.biz.member.MemberVO" alias="member" />
+
+		<typeAlias type="com.springbook.biz.place.PlaceVO" alias="place"></typeAlias>
+		<typeAlias type="com.springbook.biz.place.PlaceReviewCmVO" alias="reviewCm"></typeAlias>
+		
+		<typeAlias type="com.springbook.biz.board.BoardVO" alias="board"></typeAlias>
+		<typeAlias type="com.springbook.biz.board.BoardFileVO" alias="boardFile"></typeAlias>
+		<typeAlias type="com.springbook.biz.board.FreeCommentVO" alias="freeComment"></typeAlias>
+		
+		<typeAlias type="com.springbook.biz.trip.CommentVO" alias="comment"></typeAlias>
+	</typeAliases>
+
+	<!-- Sql Mapper 설정 -->
+	<mappers>
+		<mapper resource="mappings/trip-mapping.xml" />
+		<mapper resource="mappings/member-mapping.xml" />
+		<mapper resource="mappings/place-mapping.xml"/>
+		<mapper resource="mappings/board-mapping.xml" />
+	</mappers>
+</configuration>
+

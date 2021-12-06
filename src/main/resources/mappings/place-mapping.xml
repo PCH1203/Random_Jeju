@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- mapper DTD 선언 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- mapper자체가 DAO 분리되어 나온 개념이기 때문에 namespace는 DAO명을 따라가는 경우가 일반적임 -->
+<mapper namespace="PlaceDAO">
+
+
+	<insert id="insertPlace">
+   <![CDATA[
+
+ INSERT INTO PLACE( 
+               P_SEQ
+               , P_CATEGORY
+               , P_AREA
+               , P_NAME
+               , P_ADDRESS
+               , P_TELL
+               , P_INFO
+               , P_IMG_PATH
+               , P_X_AXIS
+               , P_Y_AXIS
+               , ORIGINALFILENAME
+               , FILEPATH
+               )
+
+VALUES(
+               (SELECT IFNULL(MAX(P_SEQ), 0) + 1 FROM PLACE A)
+                , #{pCategory}
+                , #{pArea}
+                , #{pName}
+                , #{pAddress}
+                , #{pTell}
+                , #{pInfo}
+                , #{pImgpath}
+                , #{pXaxis}
+                , #{pYaxis}
+                , #{originalFileName}
+                , #{filePath})
+                
+                
+                
+                
+   ]]>
+	</insert>
+
+
+	
+   <update id="updatePlace">
+      <![CDATA[
+
+         UPDATE place
+         SET
+
+         P_CATEGORY = #{pCategory},
+         P_AREA = #{pArea},
+         P_NAME =  #{pName},
+         P_ADDRESS =  #{pAddress},
+         P_TELL =  #{pTell},
+         P_INFO = #{pInfo},
+         P_IMG_PATH =  #{pImgpath},
+         P_X_AXIS = #{pXaxis},
+         P_Y_AXIS = #{pYaxis},
+         originalFileName = #{originalFileName},
+         filePath = #{filePath}
+         WHERE `P_SEQ` = #{pSeq};
+         
+      ]]>
+   </update>
+
+	<delete id="deletePlace">
+      <![CDATA[
+
+         DELETE FROM PLACE
+         WHERE P_SEQ = #{pSeq}
+         
+      ]]>
+	</delete>
+
+	<select id="getPlace" resultType="place">
+      <![CDATA[
+      SELECT * FROM PLACE
+         WHERE P_SEQ = #{pSeq}
+      ]]>
+	</select>
+
+
+
+	<select id="getPlaceAllList" resultType="place">
+      <![CDATA[
+      SELECT * FROM PLACE
+      ]]>
+	</select>
+
+	<select id="getPlaceSeq" resultType="int">
+		SELECT IFNULL(MAX(P_SEQ) ,0)
+		+ 1
+		FROM PLACE
+	</select>
+
+
+	<delete id="deleteFileList" parameterType="int">
+		DELETE FROM PLACE
+		WHERE P_SEQ = #{pSeq}
+	</delete>
+
+
+	<select id="getPlaceList" resultType="place">
+      <![CDATA[
+      SELECT * FROM PLACE
+      WHERE P_CATEGORY = #{pCategory}
+      ]]>
+
+	</select>
+
+	<!-- ReviewBoard.jsp 에서 장소들의 리스트를 뿌려줄때 사용 /의찬/ -->
+	<select id="getReviewBoardList" resultType="HashMap">
+		SELECT P_SEQ AS pSeq
+		,P_NAME AS pName
+		,P_CATEGORY AS pCategory
+		,ORIGINALFILENAME AS originalFileName
+		,FILEPATH AS filePath
+		FROM PLACE
+		WHERE NOT originalFileName IS NULL
+	</select>
+
+	<!-- ReviewWrite.jsp 에서 리뷰 장소들의 리스트를 뿌려줄때 사용 /의찬/ -->
+	<select id="getReviewWriteList" resultType="HashMap">
+		SELECT P_SEQ AS pSeq
+		,P_NAME AS pName
+		,ORIGINALFILENAME AS originalFileName
+		,FILEPATH AS filePath
+		FROM PLACE
+		WHERE P_SEQ = #{pSeq}
+	</select>
+
+	<!-- 장소 리뷰 입력 -->
+	<insert id="insertPlaceReview" parameterType="reviewCm">
+      <![CDATA[
+      INSERT INTO REVIEW_CM(
+                     RC_SEQ
+                    , M_SEQ
+                    , P_SEQ
+                    , BAB
+                    , CLEAN
+                    , KIND
+                    , SWIM
+                    , PARKING
+                    , REVIEW
+                    , RC_TIME
+                   )
+              VALUES(
+                       (SELECT IFNULL(MAX(RC_SEQ), 0) + 1 FROM REVIEW_CM A)
+                      , #{mSeq}
+                      , #{pSeq}
+                      , #{bab}
+                      , #{clean}
+                      , #{kind}
+                      , #{swim}
+                      , #{parking}
+                      , #{review}
+                      , now()
+                    ) 
+      ]]>
+	</insert>
+	<update id="updatePlaceFile">
+      <![CDATA[
+         UPDATE place
+         SET
+         originalFileName = #{originalFileName},
+         filePath = #{filePath}
+         WHERE `P_SEQ` = #{pSeq};
+      ]]>
+	</update>
+</mapper>

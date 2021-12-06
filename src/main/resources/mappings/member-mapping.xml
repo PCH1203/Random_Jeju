@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- mapper DTD 선언 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- mapper자체가 DAO 분리되어 나온 개념이기 때문에 namespace는 DAO명을 따라가는 경우가 일반적임 -->
+<mapper namespace="MemberDAO">
+
+	<!-- 의찬 로그인 -->
+	<select id="login" parameterType="Member" resultType="Member">
+	 <![CDATA[
+        SELECT *
+          FROM MEMBER
+         	WHERE M_ID = #{mId}
+           		AND M_PASSWORD = #{mPassword}
+           			AND M_ACCOUNT_STATUS < 3
+      ]]>
+	</select>
+
+	<!-- 회원 비밀번호 체크 -->
+	<select id="passChk" resultType="int">
+		SELECT COUNT(*) FROM MEMBER
+		WHERE M_ID= #{mPassword}
+		AND M_PASSWORD =#{mPassword}
+	</select>
+
+	<!-- 회원가입 -->
+	<!-- 1206 의찬 수정 -->
+	<insert id="insertMember">
+      <![CDATA[
+      INSERT INTO MEMBER(
+                     M_SEQ
+                    , M_ID
+                    , M_NICKNAME
+                    , M_PASSWORD
+                    , M_NAME
+                    , M_BIRTHDAY
+                    , M_EMAIL
+                    , M_GENDER
+                    , M_TELL
+                    , M_IMG_PATH
+                    , M_IMG_NAME
+                    , M_LICENSE
+                    , M_INTRODUCE
+
+                    
+                   )
+              VALUES(
+                       (SELECT IFNULL(MAX(M_SEQ), 0) + 1 FROM MEMBER A)
+                      , #{mId}
+                      , #{mNickname}
+                      , #{mPassword}
+                      , #{mName}
+                      , #{mBirthday}
+                      , #{mEmail}
+                      , #{mGender}
+                      , #{mTell}
+                      , #{mImgPath}
+                      , #{mImgName}
+                      , #{mLicense}  
+                      , #{mIntroduce}
+
+                              
+                    ) 
+      ]]>
+	</insert>
+
+
+
+	<!-- 회원정보 가져오기 -->
+	<select id="getMember" resultType="member">
+		<![CDATA[
+		SELECT * FROM MEMBER WHERE M_ID = #{mId}
+		]]>
+	</select>
+
+	<!-- 1206 의찬 수정 -->
+	<!-- 회원정보 수정 -->
+	<update id="updateMember">
+      <![CDATA[
+      UPDATE MEMBER
+         SET 
+            M_NICKNAME = #{mNickname}
+           , M_EMAIL = #{mEmail}
+           , M_PASSWORD = #{mPassword}
+           , M_TELL = #{mTell}
+           , M_INTRODUCE = #{mIntroduce}
+           , M_LICENSE = #{mLicense}
+           , M_IMG_PATH = #{mImgPath}
+           , M_IMG_NAME = #{mImgName}
+           WHERE M_ID = #{mId}
+      ]]>
+	</update>
+
+	<!-- 맴버테이블에서 seq번호 가져오기 -->
+	<select id="getMemberSeq" resultType="int">
+		SELECT IFNULL(MAX(M_SEQ)
+		,0) + 1
+		FROM MEMBER
+	</select>
+
+	<!-- 아이디 찾기 -->
+	<select id="findId" resultType="member">
+		SELECT * FROM MEMBER
+		WHERE
+		M_NAME=#{mName} AND M_PASSWORD=#{mPassword}
+	</select>
+
+	<!-- 비밀번호 찾기 -->
+	<select id="findPassword" resultType="member">
+		SELECT * FROM MEMBER
+		WHERE
+		M_ID=#{mId} AND M_NAME=#{mName} AND M_EMAIL=#{mEmail}
+	</select>
+
+	<!-- 아이디 체크 -->
+	<select id="existId" resultType="member">
+		SELECT * FROM MEMBER
+		WHERE
+		M_ID=#{mId}
+	</select>
+
+	<!-- 아이디 중복체크 -->
+	<select id="idChk" parameterType="String" resultType="member">
+		SELECT *
+		FROM MEMBER
+		WHERE M_ID = #{mId}
+	</select>
+
+	<!-- 회원 탈퇴 -->
+	<update id="Withdrawal">
+		UPDATE MEMBER
+		SET
+		`M_ACCOUNT_STATUS` = M_ACCOUNT_STATUS
+		+99
+		WHERE M_SEQ = #{mSeq}
+	</update>
+
+	<!-- 맴버테이블에서 맴버Status 가져오기 -->
+	<select id="getMemberAccountStatus" parameterType="String"
+		resultType="int">
+		SELECT M_ACCOUNT_STATUS FROM MEMBER
+		WHERE M_ID = #{mId}
+	</select>
+
+	<!-- 유저 권한 정지 -->
+	<update id="memberBan">
+		UPDATE MEMBER
+		SET
+		`M_ACCOUNT_STATUS` = M_ACCOUNT_STATUS
+		+3
+		WHERE M_SEQ = #{mSeq}
+	</update>
+
+	<!-- 유저 권한 복구 -->
+	<update id="memberKeep">
+		UPDATE MEMBER
+		SET
+		`M_ACCOUNT_STATUS` = M_ACCOUNT_STATUS
+		-3
+		WHERE M_SEQ = #{mSeq}
+	</update>
+	<!-- 회원정보목록 불러오기 -->
+	<select id="getMemberList" resultType="member">
+		<![CDATA[
+		SELECT * FROM MEMBER 
+		]]>
+	</select>
+
+</mapper>
+	
+	
+

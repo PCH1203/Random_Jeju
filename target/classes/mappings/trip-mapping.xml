@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- mapper DTD 선언 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- mapper자체가 DAO 분리되어 나온 개념이기 때문에 namespace는 DAO명을 따라가는 경우가 일반적임 -->
+<mapper namespace="TripDAO">
+	<insert id="insertTrip">
+      <![CDATA[
+      INSERT INTO TRIP(
+                     TR_SEQ
+                    , TR_NAME                    
+                    , TR_MODE
+                    , TR_AREA_SET
+                    , TR_DATE_SET
+                    , TR_GENDER_SET
+                    , TR_PERSONNEL_SET
+                    , TR_LICENSE_SET
+                    , TR_PASSWORD_SET
+                    , TR_TRANSPORTATION_SET
+                    , TR_INTRO
+                    , TR_IMG_NAME
+                    , TR_IMG_PATH
+                   )
+              VALUES(
+                       (SELECT IFNULL(MAX(TR_SEQ), 0) + 1 FROM TRIP A)
+                      , #{trName}
+                      , #{trMode}
+                      , #{trAreaSet}
+                      , #{trDateSet}
+                      , #{trGenderSet}
+                      , #{trPersonnelSet}
+                      , #{trLicenseSet}
+                      , #{trPasswordSet}
+                      , #{trTransportationSet}
+                      , #{trIntro}
+                      , #{trImgName}
+                      , #{trImgPath}
+                    ) 
+   ]]>
+	</insert>
+
+	<insert id="insertTripMembers" parameterType="tripMember">
+		INSERT INTO TRIP_MEMBERS (
+		TM_SEQ,
+		TR_SEQ,
+		M_SEQ,
+		TM_ROLE,
+		TM_NAME,
+		TM_ID
+		)
+		VALUES (
+		(SELECT IFNULL(MAX(TM_SEQ), 0) + 1 FROM TRIP_MEMBERS A),
+		#{trSeq},
+		#{mSeq},
+		#{tmRole},
+		#{tmName},
+		#{tmId}
+		)
+	</insert>
+
+	<select id="countMember" resultType="int"
+		parameterType="tripMember">
+		SELECT COUNT(*) FROM TRIP_MEMBERS WHERE TR_SEQ = #{trSeq}
+	</select>
+
+	<!-- 참여하기 위해 방을 클릭했을때 방의 정보를 불러올때 사용 -->
+	<select id="getTrip" resultType="trip">
+   <![CDATA[
+      SELECT * FROM TRIP WHERE TR_SEQ = #{trSeq}
+   ]]>
+	</select>
+
+	<!-- roomCatagory.jsp 에서 방들의 리스트를 뿌려줄때 사용 박찬호 수정 -->
+	<select id="getTripList" resultType="HashMap">
+		SELECT TR_SEQ as trSeq
+		,TR_NAME as trName
+		,TR_MODE as trMode
+		,TR_AREA_SET as trAreaSet
+		,TR_DATE_SET as trDateSet
+		,TR_STEPS as trSteps
+		,TR_STEP_STATUS as trStepStatus
+		,TR_GENDER_SET as trGenderSet
+		,TR_PERSONNEL_SET as trPersonnelSet
+		,TR_LICENSE_SET as trLicenseSet
+		,TR_TRANSPORTATION_SET as trTransprotationSet
+		,TR_PASSWORD_SET as trPasswordSet
+		,TR_INTRO as trIntro
+		,TR_IMG_NAME as trImgName
+		,TR_IMG_PATH as trImgPath
+		FROM TRIP
+	</select>
+
+	<select id="getTripSeq" resultType="int">
+		SELECT IFNULL(MAX(TR_SEQ) ,0)
+		+ 1
+		FROM TRIP
+	</select>
+
+
+	<insert id="insertTripFileList" parameterType="tripFile">
+		INSERT INTO
+		TRIP_FILE (
+		SEQ,
+		F_SEQ,
+		ORIGINAL_FILE_NAME,
+		FILE_PATH,
+		FILE_SIZE
+		)
+		VALUES (
+		#{seq},
+		(
+		SELECT IFNULL(MAX(F_SEQ), 0) + 1
+		FROM TRIP_FILE A
+		WHERE SEQ = #{seq}
+		),
+		#{originalFileName},
+		#{filePath},
+		#{fileSize}
+		)
+	</insert>
+
+	<select id="getTripFileList" parameterType="int"
+		resultType="tripFile">
+		SELECT * FROM TRIP_FILE
+		WHERE SEQ = #{seq}
+	</select>
+
+	<delete id="deleteFile" parameterType="tripFile">
+		DELETE FROM TRIP_FILE
+		WHERE SEQ = #{seq}
+		AND F_SEQ = #{fSeq}
+	</delete>
+
+	<delete id="deleteFileList" parameterType="int">
+		DELETE FROM TRIP_FILE
+		WHERE SEQ = #{seq}
+	</delete>
+
+	<!-- 여행 인원 중복 체크 -->
+	<select id="checkContainMember" resultType="int"
+		parameterType="tripMember">
+		SELECT TM_SEQ FROM TRIP_MEMBERS
+		WHERE M_SEQ = #{mSeq} AND TR_SEQ = #{trSeq}
+	</select>
+
+
+	<!-- ################################ 남주님 영역 ######################################################3 -->
+
+	<!-- 남주 1201 방에서 댓글로 대화하기 -->
+
+	<select id="readComment" resultType="HashMap">
+
+		SELECT a.CM_SEQ as cmSeq
+		, a.TR_SEQ as trSeq
+		, a.M_SEQ as mSeq
+		, a.CM_TIME as cmTime
+		, a.CM_COMENT as cmComent
+		, b.M_NICKNAME as mNickname
+		, b.M_IMG_NAME as mImgName
+		FROM randomjeju.comment as a,
+		randomjeju.member as b
+		WHERE a.M_SEQ = b.M_SEQ
+		AND TR_SEQ=#{trSeq}
+		ORDER BY CM_SEQ DESC;
+	</select>
+
+	<!-- 남주 1202 방에 댓글 남기기 -->
+
+	<insert id="insertComment" parameterType="comment">
+		INSERT INTO COMMENT(
+		CM_SEQ
+		, TR_SEQ
+		, M_SEQ
+		,CM_COMENT)
+		VALUES(
+		(SELECT IFNULL(MAX(CM_SEQ), 0) + 1 FROM COMMENT A)
+		, #{trSeq}
+		, #{mSeq}
+		, #{cmComent}
+		);
+	</insert>
+
+</mapper>
+
