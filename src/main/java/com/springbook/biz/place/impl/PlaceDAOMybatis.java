@@ -1,6 +1,7 @@
 package com.springbook.biz.place.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +9,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.springbook.biz.place.Criteria;
 import com.springbook.biz.place.PlaceReviewCmVO;
 import com.springbook.biz.place.PlaceVO;
 
@@ -94,4 +96,50 @@ public class PlaceDAOMybatis {
 		mybatis.insert("PlaceDAO.insertPlaceReview", vo);
 	}
 
+	// 리뷰 불러오기
+	public List<PlaceReviewCmVO> ReviewReadComment(int seq, Criteria cri) {
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		cri.setStartNum((cri.getPageNum() - 1) * cri.getAmount());
+		paramMap.put("pSeq", seq);
+		paramMap.put("criteria", cri);
+		System.out.println("======> Mybatis로 ReviewReadComment() 기능처리");
+		return mybatis.selectList("PlaceDAO.ReviewReadComment", paramMap);
+	}
+
+	public int selectPlaceReviewCount(int pSeq) {
+		return mybatis.selectOne("PlaceDAO.selectPlaceReviewCount", pSeq);
+	}
+
+	// 리뷰 총 갯수 불러오기
+	public int ReviewAllComment(int seq) {
+		System.out.println("======> Mybatis로 ReviewAllComment() 기능처리");
+		return mybatis.selectOne("PlaceDAO.ReviewAllComment", seq);
+	}
+
+	// 장소 주소 불러오기
+	public PlaceVO ReviewAddress(int seq) {
+		System.out.println("======> Mybatis로 ReviewAddress() 기능처리");
+		return mybatis.selectOne("PlaceDAO.ReviewAddress", seq);
+	}
+
+	// 의찬 페이징
+	public List<PlaceVO> getReviewBoardList(PlaceVO vo, Criteria cri) {
+
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		cri.setStartNum((cri.getPageNum() - 1) * cri.getAmount());
+		paramMap.put("placevo", vo);
+		paramMap.put("criteria", cri);
+		System.out.println("====> Mybatis로 getReviewBoardList() 기능 처리");
+		return mybatis.selectList("PlaceDAO.getReviewBoardList", paramMap);
+	}
+
+	public int selectPlaceBoardCount(PlaceVO vo) {
+		return mybatis.selectOne("PlaceDAO.selectPlaceBoardCount", vo);
+	}
+
+	// 리뷰 삭제
+	public void deleteReview(PlaceReviewCmVO vo) {
+		System.out.println("====> Mybatis로 deleteReview() 기능 처리");
+		mybatis.delete("PlaceDAO.deleteReview", vo);
+	}
 }

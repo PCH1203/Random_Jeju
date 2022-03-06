@@ -2,6 +2,7 @@ package com.springbook.view.place;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URLEncoder;
 import java.util.List;
 
@@ -20,6 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.springbook.biz.member.MemberVO;
+import com.springbook.biz.place.Criteria;
+import com.springbook.biz.place.PageVO;
 import com.springbook.biz.place.PlaceReviewCmVO;
 import com.springbook.biz.place.PlaceService;
 import com.springbook.biz.place.PlaceVO;
@@ -100,14 +103,6 @@ public class PlaceController {
 		String root_path = request.getSession().getServletContext().getRealPath("/");
 		String attach_path = "/upload/";
 
-		if (oldFileName != null) {
-			File file = new File(root_path + attach_path + oldFileName);
-			// 파일 삭제는 간단하네.
-			if (file.isFile()) {
-				file.delete();
-			}
-		}
-
 		MultipartFile uploadFile = vo.getUploadFile();
 
 		if (!uploadFile.isEmpty()) {
@@ -120,7 +115,12 @@ public class PlaceController {
 
 			vo.setOriginalFileName(uploadFile.getOriginalFilename());
 			vo.setFilePath(root_path + attach_path);
+
+		} else {
+			vo.setOriginalFileName(oldFileName);
+			vo.setFilePath(root_path + attach_path);
 		}
+
 		System.out.println("파일 : " + vo.getOriginalFileName());
 		System.out.println("패스 : " + vo.getFilePath());
 
@@ -181,22 +181,43 @@ public class PlaceController {
 	// 의찬 ReviewBoard.jsp
 	@RequestMapping(value = "/getReviewBoardList.do")
 
-	public String getReviewBoardList(PlaceVO vo, Model model) {
+	public String getReviewBoardList(PlaceVO vo, Model model, Criteria cri) {
 		System.out.println("장소 리뷰 목록 검색 처리");
 
-		model.addAttribute("reviewBoardList", placeService.getReviewBoardList(vo));
+		int total = placeService.selectPlaceBoardCount(vo);
+		cri.setAmount(12);
+		model.addAttribute("pageMaker", new PageVO(cri, total));
+
+		model.addAttribute("reviewBoardList", placeService.getReviewBoardList(vo, cri));
+
 		return "ReviewBoard.jsp";
 	}
 
 	// 의찬 ReviewWrite.jsp
 	@RequestMapping(value = "/getReviewWriteList.do")
 
-	public String getReviewWriteList(PlaceVO vo, Model model) {
+	public String getReviewWriteList(PlaceVO vo, Model model, Criteria cri) {
 		System.out.println("=====> getReviewWrite 컨트롤러 탐");
 		System.out.println("=====> Seq:" + vo.getpSeq());
 		System.out.println("=====> Seq:" + vo.toString());
 
+		List<PlaceReviewCmVO> ReviewCommentList = placeService.ReviewReadComment(vo.getpSeq(), cri);
+		model.addAttribute("ReviewCommentList", ReviewCommentList);
+		System.out.println("=====> pSeq :" + model.toString());
+
+		System.out.println("pv.getpSeq()=============================================" + vo.getpSeq());
+		int total = placeService.selectPlaceReviewCount(vo.getpSeq());
+		model.addAttribute("pageMaker", new PageVO(cri, total));
+
+		PlaceVO ReviewAdr = placeService.ReviewAddress(vo.getpSeq());
+		model.addAttribute("ReviewAddress", ReviewAdr);
+
+		int ReviewAllComment = placeService.ReviewAllComment(vo.getpSeq());
+		model.addAttribute("ReviewAllComment", ReviewAllComment);
+		System.out.println(ReviewAdr);
+
 		model.addAttribute("place", placeService.getReviewWriteList(vo));
+
 		return "ReviewWrite.jsp";
 	}
 
@@ -216,7 +237,34 @@ public class PlaceController {
 		placeService.insertPlaceReview(vo);
 		// 화면 네비게이션(게시글 등록 완료 후 게시글 목록으로 이동)
 		System.out.println("=========> check_3");
-		return "redirect:ReviewWrite.jsp";
+		return "redirect:getReviewWriteList.do?pSeq=" + vo.getpSeq();
 
+	}
+
+	@RequestMapping(value = "/deleteReview.do")
+	public String deleteReview(PlaceReviewCmVO vo, MemberVO mvo, HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+		System.out.println("리뷰 삭제 처리");
+
+		HttpSession session = request.getSession();
+		// 로그인 세션 호출
+		MemberVO member = (MemberVO) session.getAttribute("member");
+
+		// 넘겨줬던 PlaceReviewCmVO rcSeq를 reviewboardComment DB의 reSeq로 넘겨받고싶은 상황
+		System.out.println("memberVO mSeq:" + mvo.getmSeq());
+		System.out.println("세션seq" + member.getmSeq());
+
+		if ((mvo.getmSeq()) == member.getmSeq()) {
+			System.out.println("삭제 처리 되었습니다.");
+
+			placeService.deleteReview(vo);
+		} else {
+			// 반드시 utf-8 먼저 지정 후 PrintWriter out 객체 생성 할 것.
+			response.setContentType("text/html; charset=UTF-8");
+			PrintWriter out = response.getWriter();
+			out.println("<script> alert('작성자만 삭제할수 있습니다.');</script>");
+			out.flush();
+		}
+		return "getReviewWriteList.do?pSeq=" + vo.getpSeq();
 	}
 }

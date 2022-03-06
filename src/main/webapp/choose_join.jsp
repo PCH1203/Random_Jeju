@@ -26,24 +26,46 @@
 <link
 	href='https://fonts.googleapis.com/css?family=Lora:400,400italic,700%7CMontserrat:400,700'
 	rel='stylesheet' type='text/css'>
+	<style>
+	body {
+    background-image: url(img/제주사진/제주028.jpg);
+    background-repeat: no-repeat;
+}
+
+body {
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+body::after {
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  opacity: 0.9;
+}
+	</style>
 </head>
 <body class="scroll-assist">
 	<a id="top"></a>
 	<div class="loader"></div>
 
 	<!--  Header 인클루드  -->
-	<jsp:include page="Header_2.jsp" />
+	<jsp:include page="Header.jsp" />
 
 	<!--end of modal-container-->
-	<div class="main-container transition--fade">
-		<section class="height-50 page-title page-title--animate">
+	<div class="main-container transition--fade" >
+		<section class="height-40 page-title page-title--animate">
 			<div class="container pos-vertical-center">
-				<div class="row">
+				
 					<div class="col-sm-12 text-center">
-						<h2>어떤 여행을 원하시나요?</h2>
+					<br>
+					<br>
+						<h2 style="color: white;">어떤 여행을 원하시나요?</h2>
 						<p class="lead"></p>
 					</div>
-				</div>
+				
 				<!--end row-->
 			</div>
 			<!--end container-->
@@ -57,7 +79,7 @@
 								<a href="getTripList.do">
 									<div class="card card-4">
 										<div class="card__image">
-											<img alt="Pic" src="img/제주021.jpg" style="max-height: 50vh;" />
+											<img alt="Pic" src="img/제주021.jpg" style="max-height: 50vh; opacity: 0.85" />
 										</div>
 										<div class="card__body boxed boxed--sm bg--white">
 											<h3>참여하기</h3>
@@ -77,7 +99,7 @@
 								<a href="createTrip.do">
 									<div class="card card-4">
 										<div class="card__image">
-											<img alt="Pic" src="img/제주002.jpg" style="max-height: 50vh;" />
+											<img alt="Pic" src="img/제주사진/제주017.jpg" style="max-height: 50vh; opacity: 0.85" />
 										</div>
 										<div class="card__body boxed boxed--sm bg--white">
 											<h3>방 만들기</h3>

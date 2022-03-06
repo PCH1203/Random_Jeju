@@ -6,7 +6,15 @@ public class FreeCommentVO {
    private String fmComment;
    private String fmNickname;
    private int seq;
-   public int getFmSeq() {
+   private int mSeq;
+   
+   public int getmSeq() {
+	return mSeq;
+}
+public void setmSeq(int mSeq) {
+	this.mSeq = mSeq;
+}
+public int getFmSeq() {
       return fmSeq;
    }
    public void setFmSeq(int fmSeq) {

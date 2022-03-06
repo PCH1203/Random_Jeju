@@ -2,6 +2,8 @@ package com.springbook.biz.board;
 
 import java.util.List;
 
+import com.springbook.biz.common.Criteria;
+
 public interface BoardService {
 	// CRUD 기능의 메소드 구현
 	// 글 등록
@@ -26,7 +28,7 @@ public interface BoardService {
 	void insertBoardFileList(List<BoardFileVO> fileList);
 
 	// 파일목록 리턴
-	BoardFileVO getBoardFileList(int seq);
+	List<BoardFileVO> getBoardFileList(int seq);
 
 	// 파일삭제
 	void deleteFile(BoardFileVO vo);
@@ -49,4 +51,14 @@ public interface BoardService {
 
 	// 댓글 삭제
 	void deleteComment(FreeCommentVO vo);
+
+	//파일 전부 삭제 (업데이트)
+	void deleteBoardFileList(int seq);
+	
+	List<BoardVO> getBoardList(BoardVO vo, Criteria cri);
+	int selectBoardCount(BoardVO vo);
+	
+	List<FreeCommentVO> freeCommentList(FreeCommentVO vo, Criteria cri);
+	
+	int selectCommentCount(FreeCommentVO vo);
 }

@@ -58,6 +58,28 @@ P, h1, h2, h3, h4, h5, h6, div, a, i {
 	background-color: rgba(138, 137, 137, 0.7);
 	text-align: center;
 }
+/* 스타일 추가 */
+	em {
+		font-size:12px;
+	
+		}
+	.masonry__container{
+		display:flex;
+		flex-flow: wrap;
+	
+	
+	}
+	
+	.masonry__item{
+		position:relative!important;
+		top:0px!important;
+		right:0px!important;
+		left:0px!important;
+		bottom:0px!important;
+		
+	 }
+	 
+	 
 </style>
 
 
@@ -129,7 +151,7 @@ P, h1, h2, h3, h4, h5, h6, div, a, i {
 							</li>
 							<li>
 								<div class="col-sm-10 col-sm-offset-1 text-center">
-									<blockquote></blockquote>
+									<blockquote>제주º와 함께 잊지 못할 추억을 만드세요.</blockquote>
 									<h5></h5>
 								</div>
 							</li>
@@ -148,21 +170,24 @@ P, h1, h2, h3, h4, h5, h6, div, a, i {
 				</h3>
 			</div>
 			<div class="masonry__filters text-center" data-filter-all-text="전체"></div>
-			<div class="masonry__container">
+			<div class="masonry__container row">
 
 				<!-- <<<< 숙소 >>>>  -->
 				<div class="col-md-4 col-sm-6 masonry__item"
 					data-masonry-filter="숙소">
 					<a href="#">
 						<div class="hover-element hover-element-1"
-							data-title-position="top,right">
+							data-title-position="center,left"> <!-- right변경left로 -->
 							<div class="hover-element__initial">
-								<img alt="Pic" src="img/place_4.jpg" />
+								<img alt="Pic" src="img/오후숙소.jpg" />
 							</div>
 							<div class="hover-element__reveal" data-overlay="9">
 								<div class="boxed">
-									<h5>Freehance</h5>
-									<span> <em>iOS Application</em>
+									<h5>오후만 있던 일요일 </h5>
+									<span>
+									<em>제주 전통가옥을 개조해 고즈넉하고 아름다운 숙소</em><br><br>
+									<em>전화번호: 010-7440-1532</em><br>
+									<em>주소: 제주일주서로 5871-2</em><br>
 									</span>
 								</div>
 							</div>
@@ -174,14 +199,17 @@ P, h1, h2, h3, h4, h5, h6, div, a, i {
 					data-masonry-filter="숙소">
 					<a href="#">
 						<div class="hover-element hover-element-1"
-							data-title-position="top,right">
+							data-title-position="center,left">
 							<div class="hover-element__initial">
-								<img alt="Pic" src="img/room_1.jpg" />
+								<img alt="Pic" src="img/lhotel.jpg" />
 							</div>
 							<div class="hover-element__reveal" data-overlay="9">
 								<div class="boxed">
-									<h5>Freehance</h5>
-									<span> <em>iOS Application</em>
+									<h5>제주 롯데 호텔</h5>
+									<span>
+									<em>캐릭터룸과 플레이토피아등의 시설이 갖춰진 가족 맞춤 호텔 </em><br><br>
+									<em>전화번호: +82-64-731-1000</em><br>
+									<em>주소: 제주특별자치도 서귀포시 중문관광로 72번길 35</em><br>
 									</span>
 								</div>
 							</div>
@@ -196,14 +224,18 @@ P, h1, h2, h3, h4, h5, h6, div, a, i {
 					data-masonry-filter="카페">
 					<a href="#">
 						<div class="hover-element hover-element-1"
-							data-title-position="top,right">
+							data-title-position="center,left">
 							<div class="hover-element__initial">
 								<img alt="Pic" src="img/pch_img_6.jpg" />
 							</div>
 							<div class="hover-element__reveal" data-overlay="9">
 								<div class="boxed">
-									<h5>Michael Andrews</h5>
-									<span> <em>Branding & Identity</em>
+									<h5>제주 노티드</h5>
+									<span>
+									<em>야자수와 곰과 도넛이 어우러진 카페</em><br><br>
+									<em>전화번호: 0507-1362-9377</em><br>
+									<em>영업시간: 매일 10:00~ 20:00</em><br>
+									<em>주소: 제주 제주시 애월읍 애월리 2527-3 1,2층</em><br>
 									</span>
 								</div>
 							</div>
@@ -214,14 +246,18 @@ P, h1, h2, h3, h4, h5, h6, div, a, i {
 					data-masonry-filter="카페">
 					<a href="#">
 						<div class="hover-element hover-element-1"
-							data-title-position="top,right">
+							data-title-position="center,left">
 							<div class="hover-element__initial">
-								<img alt="Pic" src="img/pch_img_5.PNG" />
+								<img alt="Pic" src="img/오설록.jpg" />
 							</div>
 							<div class="hover-element__reveal" data-overlay="9">
 								<div class="boxed">
-									<h5>Pillar Stationary</h5>
-									<span> <em>Branding Collateral</em>
+									<h5>제주 오설록 티스톤</h5>
+									<span> 
+									<em>푸르른 곶자왈을 바라보며<br> 티클래스를 들을 수 있다.</em><br><br>
+									<em>예약제운영</em><br>
+									<em>전화번호: 010-4568-5312</em><br>
+									<em>주소: 제주 서귀포시 안덕면 신화역사로 15 오설록</em><br>
 									</span>
 								</div>
 							</div>
@@ -232,14 +268,17 @@ P, h1, h2, h3, h4, h5, h6, div, a, i {
 					data-masonry-filter="장소">
 					<a href="#">
 						<div class="hover-element hover-element-1"
-							data-title-position="top,right">
+							data-title-position="center,left">
 							<div class="hover-element__initial">
 								<img alt="Pic" src="img/성산_1.jpg" />
 							</div>
 							<div class="hover-element__reveal" data-overlay="9">
 								<div class="boxed">
-									<h5>Authentic Apparel</h5>
-									<span> <em>Packaging Design</em>
+									<h5>백록담</h5>
+									<span>
+									<em> 제주도 한라산 산정에 있는 호수로<br> 사계절 내내 아름답다.</em><br><br>
+									<em>전화번호: 064-756-9950</em><br>
+									<em>주소:제주 서귀포시 토평동 산15-1</em><br>
 									</span>
 								</div>
 							</div>
@@ -259,14 +298,19 @@ P, h1, h2, h3, h4, h5, h6, div, a, i {
 					data-masonry-filter="식당">
 					<a href="#">
 						<div class="hover-element hover-element-1"
-							data-title-position="top,right">
+							data-title-position="center,left">
 							<div class="hover-element__initial">
-								<img alt="Pic" src="img/식당_2.jpg" />
+								<img alt="Pic" src="img/식당1.jpg" />
 							</div>
 							<div class="hover-element__reveal" data-overlay="9">
 								<div class="boxed">
-									<h5>Tesla Controller</h5>
-									<span> <em>Apple Watch Application</em>
+									<h5>카노푸스다이닝</h5>
+										<span> 
+									<em>오션뷰를 가진 선상컨셉의 다이닝 레스토랑</em><br><br>
+									<em>영업시간 : 매일 11:00~15:00</em><br>
+									<em>영업시간 : 매일 18:00~22:00</em><br>
+									<em>전화번호: 064-735-3036</em><br>
+									<em>주소: 제주 서귀포시 중문관광로 198</em><br>
 									</span>
 								</div>
 							</div>

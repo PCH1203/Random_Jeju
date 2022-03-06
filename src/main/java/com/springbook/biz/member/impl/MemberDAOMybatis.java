@@ -53,8 +53,8 @@ public class MemberDAOMybatis {
 	public MemberVO getMember(MemberVO vo) {
 		return mybatis.selectOne("MemberDAO.getMember", vo);
 	}
-	
-	//아이디 중복 체크
+
+	// 아이디 중복 체크
 	public MemberVO idChk(String id) {
 		System.out.println("====> Mybatis로idChk() 기능 처리");
 		MemberVO member = mybatis.selectOne("MemberDAO.idChk", id);
@@ -67,7 +67,7 @@ public class MemberDAOMybatis {
 		mybatis.update("MemberDAO.Withdrawal", vo);
 	}
 
-	//아이디 비교하기
+	// 아이디 비교하기
 	public MemberVO existId(String mId) {
 		System.out.println("====> Mybatis로existId() 기능 처리");
 		MemberVO member = mybatis.selectOne("MemberDAO.existId", mId);
@@ -79,7 +79,6 @@ public class MemberDAOMybatis {
 		System.out.println("====> Mybatis로AccountStatus() 기능 처리");
 		return mybatis.selectOne("MemberDAO.getMemberAccountStatus", mId);
 	}
-
 
 	// 11.24일 유저목록 구현
 	public List<MemberVO> getMemberList(MemberVO vo) {
@@ -95,5 +94,11 @@ public class MemberDAOMybatis {
 	public void memberKeep(MemberVO vo) {
 
 		mybatis.update("MemberDAO.memberKeep", vo);
+	}
+
+	// 회원 비밀번호 수정
+	public void updatePassword(MemberVO vo) {
+		System.out.println("====> Mybatis로 updateMember() 기능 처리");
+		mybatis.update("MemberDAO.updatePassword", vo);
 	}
 }

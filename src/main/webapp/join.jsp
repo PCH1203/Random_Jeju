@@ -33,6 +33,9 @@
 	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
 	crossorigin="anonymous">
 
+  <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
 <style>
 body {
 	min-height: 100vh;
@@ -141,6 +144,10 @@ input[type="checkbox"] {
 .input__on-off:checked+.label__on-off .marble {
 	left: 33px;
 }
+
+ button{
+    background-color: rgba(166, 208, 205, 0.8); border-style: none;  color: white;
+    }
 </style>
 </head>
 
@@ -154,15 +161,18 @@ input[type="checkbox"] {
 		<section class="cover cover-8" style="height: 130em;">
 			<div class="col-md-7 col-sm-5">
 				<div class="background-image-holder">
-					<img alt="image" src="img/dolha.jpg" />
+					<img alt="image" src="img/제주사진/제주012.jpg" />
 				</div>
 			</div>
 			<div class="col-md-5 col-sm-7 bg--white text-center">
 				<div class="pos-vertical-center">
-					<img class="logo" alt="Pillar" src="img/logo-large-dark.png" />
-					<p class="lead">
-						회원가입 <br /> 즐거운 여행에 재밌는 요소를 더하세요!
-					</p>
+					<img class="logo" alt="Pillar" src="img/logo_demo_dark.png" 
+					style="margin: 3em;"/>
+					
+					<h4 style="font-family: 'Noto Sans KR', sans-serif; font-weight: bold;" >
+						회원가입 
+					</h4>
+					<p style="font-size: small;">JEJUº에 회원가입하고 새로운 여행을 즐겨봐요!</p>
 					<div class="text-left">
 						<form action="insertMember.do" method="post"
 							class="validation-form" enctype="multipart/form-data" novalidate>
@@ -310,7 +320,7 @@ input[type="checkbox"] {
 							<!-- submit 버튼과 reset 버튼 -->
 
 							<div class="row" style="margin-top: 50px;">
-								<button class="btn btn-primary col-md-8" type="submit">가입</button>
+								<button class="btn col-md-8" type="submit"  style="background-color: rgba(166, 208, 205, 0.8); border-style: none;  color: white;">가입</button>
 								<button type="reset" id="btnReset"
 									class="btn btn-light col-md-3">취소</button>
 							</div>

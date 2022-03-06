@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.springbook.biz.place.Criteria;
 import com.springbook.biz.place.PlaceReviewCmVO;
 import com.springbook.biz.place.PlaceService;
 import com.springbook.biz.place.PlaceVO;
@@ -75,6 +76,46 @@ public class PlaceServiceImpl implements PlaceService {
 	@Override
 	public void insertPlaceReview(PlaceReviewCmVO vo) {
 		placeDAO.insertPlaceReview(vo);
+	}
+
+	// 리뷰 불러오기
+	@Override
+	public List<PlaceReviewCmVO> ReviewReadComment(int seq, Criteria cri) {
+		return placeDAO.ReviewReadComment(seq, cri);
+	}
+
+	@Override
+	public int selectPlaceReviewCount(int pSeq) {
+		return placeDAO.selectPlaceReviewCount(pSeq);
+	}
+
+	// 리뷰 총 갯수 불러오기
+	@Override
+	public int ReviewAllComment(int seq) {
+		return placeDAO.ReviewAllComment(seq);
+	}
+
+	// 장소 주소 불러오기
+	@Override
+	public PlaceVO ReviewAddress(int seq) {
+		return placeDAO.ReviewAddress(seq);
+	}
+
+	// 의찬 페이징
+	@Override
+	public List<PlaceVO> getReviewBoardList(PlaceVO vo, Criteria cri) {
+		return placeDAO.getReviewBoardList(vo, cri);
+	}
+
+	@Override
+	public int selectPlaceBoardCount(PlaceVO vo) {
+		return placeDAO.selectPlaceBoardCount(vo);
+	}
+
+	// 리뷰 삭제
+	@Override
+	public void deleteReview(PlaceReviewCmVO vo) {
+		placeDAO.deleteReview(vo);
 	}
 
 }

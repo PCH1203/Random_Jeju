@@ -9,6 +9,7 @@ import com.springbook.biz.board.BoardFileVO;
 import com.springbook.biz.board.BoardService;
 import com.springbook.biz.board.BoardVO;
 import com.springbook.biz.board.FreeCommentVO;
+import com.springbook.biz.common.Criteria;
 
 @Service("boardService")
 /*
@@ -52,7 +53,7 @@ public class BoardServiceImpl implements BoardService {
 		boardDAO.insertBoardFileList(fileList);
 	}
 
-	public BoardFileVO getBoardFileList(int seq) {
+	public List<BoardFileVO> getBoardFileList(int seq) {
 		return boardDAO.getBoardFileList(seq);
 	}
 
@@ -92,4 +93,31 @@ public class BoardServiceImpl implements BoardService {
 	public void deleteComment(FreeCommentVO vo) {
 		boardDAO.deleteComment(vo);
 	}
+
+	@Override
+	public void deleteBoardFileList(int seq) {
+		boardDAO.deleteBoardFileList(seq);
+		
+	}
+	
+	@Override
+	public List<BoardVO> getBoardList(BoardVO vo, Criteria cri) {
+		return boardDAO.getBoardList(vo, cri);
+	}
+		
+	@Override
+	public int selectBoardCount(BoardVO vo) {
+		return boardDAO.selectBoardCount(vo);
+	}
+	
+	@Override
+	public List<FreeCommentVO> freeCommentList(FreeCommentVO vo, Criteria cri) {
+		return boardDAO.freeCommentList(vo, cri);
+	}
+		
+	@Override
+	public int selectCommentCount(FreeCommentVO vo) {
+		return boardDAO.selectCommentCount(vo);
+	}
+	
 }

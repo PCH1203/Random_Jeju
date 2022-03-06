@@ -66,13 +66,31 @@
 	</insert>
 
 
-
-	<!-- 회원정보 가져오기 -->
-	<select id="getMember" resultType="member">
-		<![CDATA[
-		SELECT * FROM MEMBER WHERE M_ID = #{mId}
-		]]>
-	</select>
+	   <!-- 회원정보 가져오기 -->
+   <select id="getMember" resultType="member">
+      <![CDATA[
+      
+      SELECT
+      M_SEQ as mSeq
+      ,M_ID as mId
+      ,M_PASSWORD as mPassword
+      ,M_NICKNAME as mNickname
+      ,M_NAME as mName
+      ,YEAR(NOW())-YEAR(M_BIRTHDAY)+1 as mBirthday
+      ,M_EMAIL as mEmail
+      ,M_GENDER as mGender
+      ,M_TELL as mTell
+      ,M_LICENSE as mLicense
+      ,M_IMG_PATH as mImgPath
+      ,M_IMG_NAME as mImgName
+      ,M_INTRODUCE as mIntroduce
+      ,M_ACCOUNT_STATUS as mAccountStatus
+      
+      FROM MEMBER 
+      
+      WHERE M_SEQ = #{mSeq}
+      ]]>
+   </select>
 
 	<!-- 1206 의찬 수정 -->
 	<!-- 회원정보 수정 -->
@@ -82,7 +100,6 @@
          SET 
             M_NICKNAME = #{mNickname}
            , M_EMAIL = #{mEmail}
-           , M_PASSWORD = #{mPassword}
            , M_TELL = #{mTell}
            , M_INTRODUCE = #{mIntroduce}
            , M_LICENSE = #{mLicense}
@@ -103,7 +120,7 @@
 	<select id="findId" resultType="member">
 		SELECT * FROM MEMBER
 		WHERE
-		M_NAME=#{mName} AND M_PASSWORD=#{mPassword}
+		M_NAME=#{mName} AND M_EMAIL=#{mEmail}
 	</select>
 
 	<!-- 비밀번호 찾기 -->
@@ -156,9 +173,9 @@
 	<update id="memberKeep">
 		UPDATE MEMBER
 		SET
-		`M_ACCOUNT_STATUS` = M_ACCOUNT_STATUS
-		-3
-		WHERE M_SEQ = #{mSeq}
+		`M_ACCOUNT_STATUS` = 0
+		WHERE M_SEQ =
+		#{mSeq}
 	</update>
 	<!-- 회원정보목록 불러오기 -->
 	<select id="getMemberList" resultType="member">
@@ -167,6 +184,16 @@
 		]]>
 	</select>
 
+	<!-- 비밀번호 변경 -->
+	<update id="updatePassword">
+	 <![CDATA[
+     UPDATE MEMBER
+		SET
+		M_PASSWORD = #{mPassword}
+		WHERE M_ID = #{mId};
+         	
+      ]]>
+	</update>
 </mapper>
 	
 	

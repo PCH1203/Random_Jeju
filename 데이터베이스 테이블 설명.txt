@@ -1,0 +1,16 @@
+[데이터 베이스 ]
+
+member			회원정보
+
+board			자유게시판
+board-file		자유게시판 첨부파일
+freeboard-comment	자유게시판 댓글
+
+place			장소정보
+reviewboard-comment	장소추천 게시판 댓글
+
+comment			trip 채팅 데이터
+tr_schedule		여행 스케쥴
+trip			여행 만들어진 방에 대한 정보
+trip_members		여행 멤버
+review			여행이 끝난 후 멤버에 대한 리뷰를 남긴 데이터

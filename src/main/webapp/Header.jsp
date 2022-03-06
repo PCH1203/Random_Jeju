@@ -10,8 +10,8 @@
 	url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100&display=swap')
 	;
 
-P, h1, h2, h3, h4, h5, h6, div, a, i {
-	font-family: 'Noto Sans KR', sans-serif;
+li{
+list-style-type : none
 }
 </style>
 
@@ -30,12 +30,12 @@ P, h1, h2, h3, h4, h5, h6, div, a, i {
 				<li><a href="index.jsp"> Home </a></li>
 
 				<!-- intro -->
-				<li><a href="#"> Intro </a>
+				<li><a href="about.jsp"> Intro </a>
 					<ul class="multi-column">
 						<li>
 							<ul>
 								<li><a href="about.jsp"> 소개 </a></li>
-								<!-- <li><a href="elements-buttons.html"> 이야기 </a></li> -->
+								<li><a href="FAQ.jsp"> FAQ </a></li>
 								<li><a href="dev.jsp"> 개발자들 </a></li>
 							</ul>
 						</li>
@@ -43,7 +43,7 @@ P, h1, h2, h3, h4, h5, h6, div, a, i {
 
 				<!-- Trip -->
 				<c:if test="${not empty member or not empty member.mId }">
-				<li><a href="#"> Trip </a>
+				<li><a href="choose_join.jsp"> Trip </a>
 					<ul class="multi-column">
 						<li>
 							<ul>
@@ -57,7 +57,7 @@ P, h1, h2, h3, h4, h5, h6, div, a, i {
 					</ul></li>
 				</c:if>
 				<c:if test = "${empty member or empty member.mId }">
-				<li><a href="#"> Trip </a>
+				<li><a href="login.jsp"> Trip </a>
 					<ul class="multi-column">
 						<li>
 							<ul>
@@ -121,8 +121,8 @@ P, h1, h2, h3, h4, h5, h6, div, a, i {
 							</c:if>
 							
 						</li>
-								<li><a href="elements-buttons.html"> blank_2 </a></li>
-								<li><a href="elements-cards.html"> blank_3 </a></li>
+								<!-- <li><a href="elements-buttons.html"> blank_2 </a></li>
+								<li><a href="elements-cards.html"> blank_3 </a></li> -->
 							</ul>
 						</li>
 					</ul>
@@ -155,10 +155,7 @@ P, h1, h2, h3, h4, h5, h6, div, a, i {
 		<!-- <<<<< 검색 기능 비활성화 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
 
 		<div class="nav-module right">
-			<a href="#" class="nav-function modal-trigger"
-				data-modal-id="search-form"> <i
-				class="interface-search icon icon--sm"></i> <span>Search</span>
-			</a>
+			
 		</div>
 
 		<!-- <<<<< end 검색 기능 비활성화 end >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->

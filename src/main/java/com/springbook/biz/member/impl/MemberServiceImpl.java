@@ -26,7 +26,6 @@ public class MemberServiceImpl implements MemberService {
 		memberDAO.insertMember(vo);
 	}
 
-
 	// MEMBER TABLE 에서 시퀀서번호 가져오기
 	@Override
 	public int getMemberSeq() {
@@ -72,14 +71,14 @@ public class MemberServiceImpl implements MemberService {
 		memberDAO.Withdrawal(vo);
 
 	}
-	
-	//DB에 있는 아이디인지 확인하기
+
+	// DB에 있는 아이디인지 확인하기
 	@Override
 	public MemberVO existId(String mId) {
 		return memberDAO.existId(mId);
 	}
-	
-	//DB에 AccountStatus 확인하기
+
+	// DB에 AccountStatus 확인하기
 	@Override
 	public int getMemberAccountStatus(String mId) {
 		return memberDAO.getMemberAccountStatus(mId);
@@ -98,6 +97,13 @@ public class MemberServiceImpl implements MemberService {
 	// 회원권한 복구
 	public void memberKeep(MemberVO vo) {
 		memberDAO.memberKeep(vo);
+	}
+
+	// 비밀번호 수정
+	@Override
+	public void updatePassword(MemberVO vo) {
+		memberDAO.updatePassword(vo);
+
 	}
 
 }

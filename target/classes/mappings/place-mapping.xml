@@ -45,9 +45,7 @@ VALUES(
    ]]>
 	</insert>
 
-
-	
-   <update id="updatePlace">
+	<update id="updatePlace">
       <![CDATA[
 
          UPDATE place
@@ -67,7 +65,7 @@ VALUES(
          WHERE `P_SEQ` = #{pSeq};
          
       ]]>
-   </update>
+	</update>
 
 	<delete id="deletePlace">
       <![CDATA[
@@ -84,8 +82,6 @@ VALUES(
          WHERE P_SEQ = #{pSeq}
       ]]>
 	</select>
-
-
 
 	<select id="getPlaceAllList" resultType="place">
       <![CDATA[
@@ -114,50 +110,41 @@ VALUES(
 
 	</select>
 
-	<!-- ReviewBoard.jsp 에서 장소들의 리스트를 뿌려줄때 사용 /의찬/ -->
-	<select id="getReviewBoardList" resultType="HashMap">
-		SELECT P_SEQ AS pSeq
-		,P_NAME AS pName
-		,P_CATEGORY AS pCategory
-		,ORIGINALFILENAME AS originalFileName
-		,FILEPATH AS filePath
-		FROM PLACE
-		WHERE NOT originalFileName IS NULL
-	</select>
-
 	<!-- ReviewWrite.jsp 에서 리뷰 장소들의 리스트를 뿌려줄때 사용 /의찬/ -->
 	<select id="getReviewWriteList" resultType="HashMap">
 		SELECT P_SEQ AS pSeq
 		,P_NAME AS pName
 		,ORIGINALFILENAME AS originalFileName
-		,FILEPATH AS filePath
+		,FILEPATH AS
+		filePath
 		FROM PLACE
 		WHERE P_SEQ = #{pSeq}
 	</select>
 
 	<!-- 장소 리뷰 입력 -->
-	<insert id="insertPlaceReview" parameterType="reviewCm">
+	<insert id="insertPlaceReview"
+		parameterType="reviewboardComment">
       <![CDATA[
-      INSERT INTO REVIEW_CM(
+      INSERT INTO REVIEWBOARD_COMMENT(
                      RC_SEQ
                     , M_SEQ
                     , P_SEQ
                     , BAB
                     , CLEAN
-                    , KIND
-                    , SWIM
+                    , view
+                    , revisit
                     , PARKING
                     , REVIEW
                     , RC_TIME
                    )
               VALUES(
-                       (SELECT IFNULL(MAX(RC_SEQ), 0) + 1 FROM REVIEW_CM A)
+                       (SELECT IFNULL(MAX(RC_SEQ), 0) + 1 FROM REVIEWBOARD_COMMENT A)
                       , #{mSeq}
                       , #{pSeq}
                       , #{bab}
                       , #{clean}
-                      , #{kind}
-                      , #{swim}
+                      , #{view}
+                      , #{revisit}
                       , #{parking}
                       , #{review}
                       , now()
@@ -173,4 +160,94 @@ VALUES(
          WHERE `P_SEQ` = #{pSeq};
       ]]>
 	</update>
+
+	<select id="ReviewReadComment" parameterType="HashMap"
+		resultType="HashMap">
+
+		SELECT a.RC_SEQ as rcSeq
+		, a.M_SEQ as mSeq
+		, a.P_SEQ as pSeq
+		, a.BAB as bab
+		, a.CLEAN as clean
+		, a.VIEW as view
+		, a.REVISIT as revisit
+		, a.PARKING as parking
+		, a.REVIEW as review
+		, a.RC_TIME as rcTime
+		,
+		b.M_ID as mId
+		, b.M_IMG_NAME as mImgName
+		, b.M_IMG_PATH as mImgPath
+		FROM
+		REVIEWBOARD_COMMENT as a, MEMBER as b
+		WHERE a.M_SEQ = b.M_SEQ
+		AND
+		P_SEQ=#{pSeq}
+		ORDER BY RC_SEQ DESC
+		LIMIT #{criteria.amount} OFFSET
+		#{criteria.startNum}
+	</select>
+
+	<!-- 리뷰 총 갯수 불러오기 -->
+	<select id="ReviewAllComment" resultType="int">
+
+		SELECT COUNT(P_SEQ) AS
+		CNT
+		FROM REVIEWBOARD_COMMENT
+		WHERE P_SEQ = #{pSeq}
+	</select>
+
+	<!-- 장소 주소 불러오기 -->
+	<select id="ReviewAddress" resultType="place">
+      <![CDATA[
+      SELECT P_ADDRESS as pAddress
+      , P_CATEGORY as pCategory
+      , P_AREA as pArea
+      , P_TELL as pTell
+      , P_INFO as pInfo
+      , P_X_AXIS as pXaxis
+      , P_Y_AXIS as pYaxis
+      FROM PLACE
+      WHERE P_SEQ = #{pSeq}
+      ]]>
+	</select>
+
+	<!-- 보드 총 수량 페이징 -->
+	<select id="selectPlaceBoardCount" parameterType="place"
+		resultType="int">
+		SELECT COUNT(*) FROM PLACE
+	</select>
+
+	<!-- 리뷰 페이징 -->
+	<select id="selectPlaceReviewCount" parameterType="int"
+		resultType="int">
+		SELECT COUNT(*) FROM REVIEWBOARD_COMMENT
+		WHERE P_SEQ =
+		#{pSeq}
+	</select>
+
+	<!-- ReviewBoard.jsp 에서 장소들의 리스트를 뿌려줄때 사용 /의찬/ -->
+	<select id="getReviewBoardList" parameterType="HashMap"
+		resultType="place">
+		SELECT P_SEQ AS pSeq
+		,P_NAME AS pName
+		,P_CATEGORY AS
+		pCategory
+		,ORIGINALFILENAME AS
+		originalFileName
+		,FILEPATH AS filePath
+		FROM PLACE
+		WHERE ORIGINALFILENAME IS NOT NULL
+		ORDER BY P_Name DESC
+		LIMIT
+		#{criteria.amount} OFFSET
+		#{criteria.startNum}
+	</select>
+	<delete id="deleteReview" parameterType="int">
+      <![CDATA[
+      DELETE FROM REVIEWBOARD_COMMENT
+         WHERE RC_SEQ = #{rcSeq}
+      ]]>
+	</delete>
+
 </mapper>

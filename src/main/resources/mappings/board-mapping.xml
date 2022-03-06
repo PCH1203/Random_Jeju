@@ -10,6 +10,7 @@
       <![CDATA[
       INSERT INTO BOARD(
                      SEQ
+                    , M_SEQ 
                     , TITLE
                     , WRITER
                     , CONTENT
@@ -17,6 +18,7 @@
                    )
               VALUES(
                        (SELECT IFNULL(MAX(SEQ), 0) + 1 FROM BOARD A)
+                      , #{mSeq} 
                       , #{title}
                       , #{writer}
                       , #{content}
@@ -56,10 +58,13 @@
       ]]> 
    </select>
    
-   <select id="getBoardList" resultType="board">
+   <select id="getBoardList" parameterType="HashMap" resultType="board">
       <![CDATA[
-      SELECT * FROM BOARD ORDER BY SEQ DESC 
+     SELECT * FROM BOARD ORDER BY SEQ DESC 
+     LIMIT #{criteria.amount} OFFSET
+		#{criteria.startNum}
       ]]> 
+      
    <!--    WHERE 1 = 1
          <if test="searchCondition == 'TITLE'">
             AND TITLE LIKE '%' || #{searchKeyword} || '%'
@@ -76,6 +81,7 @@
       ]]> 
    
    </select>
+   
    
    <select id="getBoardSeq" resultType="int">
       SELECT IFNULL(MAX(SEQ) ,0) + 1
@@ -107,7 +113,7 @@
    <select id="getBoardFileList" parameterType="int" resultType="boardFile">
       SELECT * FROM BOARD_FILE
          WHERE SEQ = #{seq}
-          AND F_SEQ = (SELECT MAX(F_SEQ) FROM BOARD_FILE A WHERE SEQ = #{seq}) 
+         
    </select>
    
    <delete id="deleteBoardFile" parameterType="boardFile">
@@ -121,12 +127,25 @@
          WHERE SEQ = #{seq}
    </delete>
    
-   <select id="freeCommentList" resultType="freeComment">
+   <select id="freeCommentList" resultType="HashMap" parameterType="HashMap">
       <![CDATA[
-      SELECT * FROM freeboard_comment
-      WHERE SEQ = #{seq}
    
-         
+     SELECT 
+      a.FM_SEQ as fmSeq
+    , a.SEQ as seq
+    , a.M_SEQ as mSeq
+    , a.FM_TIME as fmTime
+    , a.FM_COMMENT as fmComment
+    , a.FM_NICKNAME as fmNickname
+    , b.M_IMG_NAME as mImgName
+    , b.M_NICKNAME as mNickname
+      FROM freeboard_comment as a , member as b
+      WHERE a.FM_NICKNAME = b.M_NICKNAME
+       AND SEQ= #{commentlistvo.seq}
+         ORDER BY FM_SEQ DESC
+          LIMIT #{criteria.amount} OFFSET
+		#{criteria.startNum}
+  
       ]]> 
    </select>
    
@@ -136,12 +155,14 @@
       INSERT INTO freeboard_comment(
                      FM_SEQ
                     , SEQ
+                    , M_SEQ
                     , FM_COMMENT
                     , FM_NICKNAME
                    )
               VALUES(   
                         (SELECT IFNULL (MAX(FM_SEQ), 0) + 1 FROM FREEBOARD_COMMENT A)
                       ,   #{seq}
+                      ,   #{mSeq}
                       , #{fmComment}
                       , #{fmNickname}
                     ) 
@@ -163,4 +184,16 @@
          WHERE FM_SEQ = #{fmSeq}
    </delete>
    
+   <select id="selectBoardCount" parameterType="board"
+	resultType="int">
+	SELECT COUNT(*) FROM BOARD
+</select>
+<select id="selectCommentCount" parameterType="board"
+	resultType="int">
+	SELECT COUNT(*) FROM freeboard_comment 
+	 WHERE SEQ = #{seq}
+</select>
+
+
+
 </mapper>

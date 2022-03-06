@@ -1,6 +1,8 @@
 package com.springbook.biz.board.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.springbook.biz.board.BoardFileVO;
 import com.springbook.biz.board.BoardVO;
 import com.springbook.biz.board.FreeCommentVO;
+import com.springbook.biz.common.Criteria;
 
 @Repository
 public class BoardDAOMybatis {
@@ -50,8 +53,8 @@ public class BoardDAOMybatis {
 		}
 	}
 
-	public BoardFileVO getBoardFileList(int seq) {
-		return mybatis.selectOne("BoardDAO.getBoardFileList", seq);
+	public List<BoardFileVO> getBoardFileList(int seq) {
+		return mybatis.selectList("BoardDAO.getBoardFileList", seq);
 	}
 
 	public void deleteFile(BoardFileVO vo) {
@@ -89,4 +92,39 @@ public class BoardDAOMybatis {
 	public void deleteComment(FreeCommentVO vo) {
 		mybatis.delete("BoardDAO.deleteComment", vo);
 	}
+
+	public void deleteBoardFileList(int seq) {
+		mybatis.delete("BoardDAO.deleteBoardFileList", seq);
+
+	}
+
+	public List<BoardVO> getBoardList(BoardVO vo, Criteria cri) {
+
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		cri.setStartNum((cri.getPageNum() - 1) * cri.getAmount());
+		paramMap.put("boardvo", vo);
+		paramMap.put("criteria", cri);
+		System.out.println("====> Mybatis로 getBoardList() 기능 처리");
+		return mybatis.selectList("BoardDAO.getBoardList", paramMap);
+	}
+
+	public int selectBoardCount(BoardVO vo) {
+		return mybatis.selectOne("BoardDAO.selectBoardCount", vo);
+	}
+
+	public List<FreeCommentVO> freeCommentList(FreeCommentVO vo, Criteria cri) {
+
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		cri.setStartNum((cri.getPageNum() - 1) * cri.getAmount());
+		paramMap.put("commentlistvo", vo);
+		paramMap.put("criteria", cri);
+		System.out.println("====> Mybatis로 freeCommentList() 기능 처리");
+		return mybatis.selectList("BoardDAO.freeCommentList", paramMap);
+	}
+
+	public int selectCommentCount(FreeCommentVO vo) {
+		return mybatis.selectOne("BoardDAO.selectCommentCount", vo);
+	}
+
+	
 }

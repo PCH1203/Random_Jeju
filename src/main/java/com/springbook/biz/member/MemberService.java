@@ -33,11 +33,11 @@ public interface MemberService {
 
 	// 회원 탈퇴
 	void Withdrawal(MemberVO vo);
-	
-	//DB에 있는 아이디인지 확인하기
+
+	// DB에 있는 아이디인지 확인하기
 	MemberVO existId(String mId);
-	
-	//DB에 AccountStatus 확인하기
+
+	// DB에 AccountStatus 확인하기
 	int getMemberAccountStatus(String mId);
 
 	// 11.24일 유저목록 구현
@@ -48,5 +48,8 @@ public interface MemberService {
 
 	// 회원권한 복구
 	void memberKeep(MemberVO vo);
+
+	// 비밀번호 수정
+	void updatePassword(MemberVO vo);
 
 }

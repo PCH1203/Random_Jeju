@@ -22,6 +22,7 @@ public class TripVO {
 	private String trIntro;
 	private String trImgName;
 	private String trImgPath;
+	private int trStatus;
 
 	@XmlTransient
 	private String SearchCondition;
@@ -29,8 +30,6 @@ public class TripVO {
 	private String SearchKeyword;
 	@XmlTransient
 	private MultipartFile uploadFile;
-	
-	
 	public int getTrSeq() {
 		return trSeq;
 	}
@@ -121,6 +120,12 @@ public class TripVO {
 	public void setTrImgPath(String trImgPath) {
 		this.trImgPath = trImgPath;
 	}
+	public int getTrStatus() {
+		return trStatus;
+	}
+	public void setTrStatus(int trStatus) {
+		this.trStatus = trStatus;
+	}
 	public String getSearchCondition() {
 		return SearchCondition;
 	}
@@ -145,10 +150,15 @@ public class TripVO {
 				+ ", trDateSet=" + trDateSet + ", trSteps=" + trSteps + ", trStepStatus=" + trStepStatus
 				+ ", trGenderSet=" + trGenderSet + ", trPersonnelSet=" + trPersonnelSet + ", trLicenseSet="
 				+ trLicenseSet + ", trTransportationSet=" + trTransportationSet + ", trPasswordSet=" + trPasswordSet
-				+ ", trIntro=" + trIntro + ", trImgName=" + trImgName + ", trImgPath=" + trImgPath
-				+ ", SearchCondition=" + SearchCondition + ", SearchKeyword=" + SearchKeyword + ", uploadFile="
-				+ uploadFile + "]";
+				+ ", trIntro=" + trIntro + ", trImgName=" + trImgName + ", trImgPath=" + trImgPath + ", trStatus="
+				+ trStatus + ", SearchCondition=" + SearchCondition + ", SearchKeyword=" + SearchKeyword
+				+ ", uploadFile=" + uploadFile + "]";
 	}
+	
+	
+	
+	
+	
 	
 	
 	

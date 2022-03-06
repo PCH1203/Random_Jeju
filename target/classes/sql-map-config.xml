@@ -12,19 +12,21 @@
 	<!-- Alias 설정 -->
 	<typeAliases>
 		<typeAlias type="com.springbook.biz.trip.TripVO" alias="trip"/>
-		<typeAlias type="com.springbook.biz.trip.TripFileVO" alias="tripFile"/>
 		<typeAlias type="com.springbook.biz.trip.TripMemberVO" alias="tripMember"/>
-
+		<typeAlias type="com.springbook.biz.trip.ScheduleVO" alias="schedule"/>
+		<typeAlias type="com.springbook.biz.trip.ReviewVO" alias="review"/>
+		<typeAlias type="com.springbook.biz.trip.CommentVO" alias="comment"></typeAlias>
+		
 		<typeAlias type="com.springbook.biz.member.MemberVO" alias="member" />
 
 		<typeAlias type="com.springbook.biz.place.PlaceVO" alias="place"></typeAlias>
-		<typeAlias type="com.springbook.biz.place.PlaceReviewCmVO" alias="reviewCm"></typeAlias>
+		<typeAlias type="com.springbook.biz.place.PlaceReviewCmVO" alias="reviewboardComment"></typeAlias>
 		
 		<typeAlias type="com.springbook.biz.board.BoardVO" alias="board"></typeAlias>
 		<typeAlias type="com.springbook.biz.board.BoardFileVO" alias="boardFile"></typeAlias>
 		<typeAlias type="com.springbook.biz.board.FreeCommentVO" alias="freeComment"></typeAlias>
 		
-		<typeAlias type="com.springbook.biz.trip.CommentVO" alias="comment"></typeAlias>
+		
 	</typeAliases>
 
 	<!-- Sql Mapper 설정 -->

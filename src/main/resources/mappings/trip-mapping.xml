@@ -5,6 +5,8 @@
 
 <!-- mapper자체가 DAO 분리되어 나온 개념이기 때문에 namespace는 DAO명을 따라가는 경우가 일반적임 -->
 <mapper namespace="TripDAO">
+
+	<!-- mroom.jsp를통해 방 생성 할때 사용하는 insert sql구문 -->
 	<insert id="insertTrip">
       <![CDATA[
       INSERT INTO TRIP(
@@ -40,8 +42,31 @@
    ]]>
 	</insert>
 
+	<!-- 여행 생성시 host 등록 -->
+	<insert id="insertTripMemberH" parameterType="tripMember">
+		INSERT INTO
+		TRIP_MEMBERS (
+		TM_SEQ,
+		TR_SEQ,
+		M_SEQ,
+		TM_ROLE,
+		TM_NAME,
+		TM_ID
+		)
+		VALUES (
+		(SELECT IFNULL(MAX(TM_SEQ), 0) + 1 FROM TRIP_MEMBERS A),
+		(SELECT
+		MAX(TR_SEQ) FROM TRIP B),
+		#{mSeq},
+		#{tmRole},
+		#{tmName},
+		#{tmId}
+		)
+	</insert>
+
 	<insert id="insertTripMembers" parameterType="tripMember">
-		INSERT INTO TRIP_MEMBERS (
+		INSERT INTO
+		TRIP_MEMBERS (
 		TM_SEQ,
 		TR_SEQ,
 		M_SEQ,
@@ -61,34 +86,42 @@
 
 	<select id="countMember" resultType="int"
 		parameterType="tripMember">
-		SELECT COUNT(*) FROM TRIP_MEMBERS WHERE TR_SEQ = #{trSeq}
+		SELECT COUNT(*) FROM TRIP_MEMBERS WHERE TR_SEQ =
+		#{trSeq}
 	</select>
 
 	<!-- 참여하기 위해 방을 클릭했을때 방의 정보를 불러올때 사용 -->
 	<select id="getTrip" resultType="trip">
-   <![CDATA[
-      SELECT * FROM TRIP WHERE TR_SEQ = #{trSeq}
-   ]]>
+	<![CDATA[
+		SELECT * FROM TRIP WHERE TR_SEQ = #{trSeq}
+	]]>
 	</select>
 
 	<!-- roomCatagory.jsp 에서 방들의 리스트를 뿌려줄때 사용 박찬호 수정 -->
 	<select id="getTripList" resultType="HashMap">
-		SELECT TR_SEQ as trSeq
-		,TR_NAME as trName
-		,TR_MODE as trMode
-		,TR_AREA_SET as trAreaSet
-		,TR_DATE_SET as trDateSet
-		,TR_STEPS as trSteps
-		,TR_STEP_STATUS as trStepStatus
-		,TR_GENDER_SET as trGenderSet
-		,TR_PERSONNEL_SET as trPersonnelSet
-		,TR_LICENSE_SET as trLicenseSet
-		,TR_TRANSPORTATION_SET as trTransprotationSet
-		,TR_PASSWORD_SET as trPasswordSet
-		,TR_INTRO as trIntro
-		,TR_IMG_NAME as trImgName
-		,TR_IMG_PATH as trImgPath
-		FROM TRIP
+		SELECT A.TR_SEQ as trSeq
+		,A.TR_NAME as trName
+		,A.TR_MODE as trMode
+		,A.TR_AREA_SET as trAreaSet
+		,A.TR_DATE_SET as trDateSet
+		,A.TR_STEPS as
+		trSteps
+		,A.TR_STEP_STATUS as trStepStatus
+		,A.TR_GENDER_SET as
+		trGenderSet
+		,A.TR_PERSONNEL_SET as trPersonnelSet
+		,A.TR_LICENSE_SET as
+		trLicenseSet
+		,A.TR_TRANSPORTATION_SET as trTransprotationSet
+		,A.TR_PASSWORD_SET as trPasswordSet
+		,A.TR_INTRO as trIntro
+		,A.TR_IMG_NAME as trImgName
+		,A.TR_IMG_PATH as trImgPath
+		,A.TR_STATUS as trStatus <!-- 12.12 박찬호 추가 -->
+		,COUNT(B.M_SEQ) as tripMember
+		FROM TRIP as A, TRIP_MEMBERS as B
+		WHERE A.TR_SEQ = B.TR_SEQ
+		GROUP BY B.TR_SEQ
 	</select>
 
 	<select id="getTripSeq" resultType="int">
@@ -98,51 +131,131 @@
 	</select>
 
 
-	<insert id="insertTripFileList" parameterType="tripFile">
-		INSERT INTO
-		TRIP_FILE (
-		SEQ,
-		F_SEQ,
-		ORIGINAL_FILE_NAME,
-		FILE_PATH,
-		FILE_SIZE
-		)
-		VALUES (
-		#{seq},
-		(
-		SELECT IFNULL(MAX(F_SEQ), 0) + 1
-		FROM TRIP_FILE A
-		WHERE SEQ = #{seq}
-		),
-		#{originalFileName},
-		#{filePath},
-		#{fileSize}
-		)
-	</insert>
-
-	<select id="getTripFileList" parameterType="int"
-		resultType="tripFile">
-		SELECT * FROM TRIP_FILE
-		WHERE SEQ = #{seq}
-	</select>
-
-	<delete id="deleteFile" parameterType="tripFile">
-		DELETE FROM TRIP_FILE
-		WHERE SEQ = #{seq}
-		AND F_SEQ = #{fSeq}
-	</delete>
-
-	<delete id="deleteFileList" parameterType="int">
-		DELETE FROM TRIP_FILE
-		WHERE SEQ = #{seq}
-	</delete>
-
 	<!-- 여행 인원 중복 체크 -->
 	<select id="checkContainMember" resultType="int"
 		parameterType="tripMember">
 		SELECT TM_SEQ FROM TRIP_MEMBERS
-		WHERE M_SEQ = #{mSeq} AND TR_SEQ = #{trSeq}
+		WHERE M_SEQ = #{mSeq} AND
+		TR_SEQ = #{trSeq}
 	</select>
+
+	<!-- 여행 맴버 리스트 불러오기 -->
+	<select id="getTripMemberList" resultType="HashMap">
+		SELECT
+		A.M_NAME as
+		mName,
+		A.M_NICKNAME AS mNickname,
+		A.M_ID as mId,
+		A.M_GENDER as mGender,
+		YEAR(NOW())-YEAR(A.M_BIRTHDAY)+1 as mBirthday,
+		A.M_IMG_PATH as
+		mImgPath,
+		A.M_IMG_NAME as mImgName,
+		A.M_LICENSE as mLicense,
+		A.M_INTRODUCE as mIntroduce,
+		B.TM_ROLE as tmRole,
+		B.M_SEQ as mSeq
+
+		FROM
+		MEMBER as A LEFT JOIN TRIP_MEMBERS as B
+
+		ON A.M_SEQ = B.M_SEQ
+
+		WHERE
+		B.TR_SEQ = #{trSeq};
+	</select>
+
+	<!-- 여행 맴버 정보 조회 -->
+	<select id="getTripMember" resultType="tripMember">
+
+		SELECT * FROM TRIP_MEMBERS
+		WHERE TR_SEQ = #{trSeq} AND M_SEQ = #{mSeq}
+
+	</select>
+
+	<!-- 여행 참가 취소 -->
+	<delete id="exitTrip" parameterType="tripMember">
+
+		DELETE FROM TRIP_MEMBERS
+		WHERE TR_SEQ = #{trSeq} AND M_SEQ = #{mSeq}
+
+	</delete>
+
+	<update id="changeTripStatus">
+
+		UPDATE TRIP
+		SET
+		TR_STATUS = #{trStatus}
+		WHERE TR_SEQ =
+		#{trSeq}
+
+	</update>
+
+	<!-- 개인 리뷰 등록 -->
+	<insert id="insertReview" parameterType="review">
+
+		INSERT INTO REVIEW(
+		R_SEQ
+		, TR_SEQ
+		, M_SEQ
+		, R_WRITER_SEQ
+		, R_CONTENT
+		, R_REVIEW_TYPE
+		,
+		R_COMPLAIN
+		)
+		VALUES(
+		(SELECT IFNULL(MAX(R_SEQ), 0)
+		+ 1 FROM REVIEW A)
+		,
+		#{trSeq}
+		, #{mSeq}
+		, #{rWriterSeq}
+		, #{rContent}
+		, #{rReviewType}
+		,
+		#{rComplain}
+		);
+	</insert>
+
+	<!-- 개인 리뷰 중복 검사 -->
+	<select id="checkReview" resultType="int">
+
+		SELECT COUNT(*)
+		FROM REVIEW
+		WHERE TR_SEQ = #{trSeq} AND M_SEQ = #{mSeq} AND R_WRITER_SEQ =
+		#{rWriterSeq}
+
+
+	</select>
+
+	<!-- 신고 대상자 account_status + 1 -->
+	<update id="updateMemberStatus" parameterType="member">
+
+		UPDATE MEMBER SET
+		M_ACCOUNT_STATUS = M_ACCOUNT_STATUS + 1 WHERE M_SEQ =
+		#{mSeq}
+
+
+	</update>
+
+	<!-- 나의 리뷰 리스트 불러오기 (12.12 박찬호 추가) -->
+	<select id="getmyReviewList" resultType="HashMap">
+		SELECT R_SEQ as rSeq
+		,TR_SEQ as trSeq
+		,M_SEQ as mSeq
+		,R_WRITER_SEQ as rWriterSeq
+		,R_CONTENT as
+		rContent
+		,R_TIME as rTime
+		,R_REVIEW_TYPE as rReviewType
+		,R_COMPLAIN as
+		rComplain
+		FROM REVIEW
+
+		WHERE M_SEQ = #{mSeq}
+	</select>
+
 
 
 	<!-- ################################ 남주님 영역 ######################################################3 -->
@@ -152,21 +265,23 @@
 	<select id="readComment" resultType="HashMap">
 
 		SELECT a.CM_SEQ as cmSeq
-		, a.TR_SEQ as trSeq
+		,
+		a.TR_SEQ as trSeq
 		, a.M_SEQ as mSeq
 		, a.CM_TIME as cmTime
-		, a.CM_COMENT as cmComent
+		, a.CM_COMENT
+		as cmComent
 		, b.M_NICKNAME as mNickname
 		, b.M_IMG_NAME as mImgName
-		FROM randomjeju.comment as a,
+		FROM
+		randomjeju.comment as a,
 		randomjeju.member as b
 		WHERE a.M_SEQ = b.M_SEQ
 		AND TR_SEQ=#{trSeq}
-		ORDER BY CM_SEQ DESC;
+		ORDER BY CM_SEQ ASC
 	</select>
 
 	<!-- 남주 1202 방에 댓글 남기기 -->
-
 	<insert id="insertComment" parameterType="comment">
 		INSERT INTO COMMENT(
 		CM_SEQ
@@ -174,12 +289,266 @@
 		, M_SEQ
 		,CM_COMENT)
 		VALUES(
-		(SELECT IFNULL(MAX(CM_SEQ), 0) + 1 FROM COMMENT A)
+		(SELECT IFNULL(MAX(CM_SEQ), 0)
+		+ 1 FROM COMMENT A)
 		, #{trSeq}
 		, #{mSeq}
 		, #{cmComent}
 		);
 	</insert>
 
+	<!-- 남주 1207 스케쥴 추가하기 -->
+	<insert id="insertTripSchedule" parameterType="trip">
+    <![CDATA[
+      INSERT INTO TR_SCHEDULE(
+                     SC_SEQ 
+                    , TR_SEQ 
+                          , P_SEQ
+                  ) 
+            VALUES (
+                     (SELECT IFNULL(MAX(SC_SEQ), 0) + 1 
+                     FROM tr_schedule a 
+                     WHERE a.TR_SEQ = #{trSeq})
+                    , #{trSeq}
+                          , (
+                        SELECT CASE MOD((SELECT IFNULL(MAX(SC_SEQ), 0) + 1 
+                                     FROM tr_schedule a 
+                                     WHERE a.TR_SEQ = #{trSeq}), 2)
+                              WHEN '1'
+                                       THEN (
+                                    CASE (SELECT COUNT(b.P_SEQ) 
+                                         FROM tr_schedule b 
+                                         where b.tr_seq = #{trSeq})
+                                                WHEN '0'
+                                                THEN (
+                                          SELECT P_SEQ
+                                             FROM PLACE
+                                             WHERE P_CATEGORY = 'tourlist'
+                                             AND P_AREA = #{trAreaSet}
+                                             order by rand() limit 1
+                                       )
+                                    ELSE (
+                                          SELECT P_SEQ
+                                             FROM PLACE
+                                             WHERE P_CATEGORY = 'tourlist'
+                                             AND P_AREA = #{trAreaSet}
+                                             AND P_SEQ NOT IN (SELECT IFNULL(b.P_SEQ, 0) FROM tr_schedule b where b.tr_seq = #{trSeq})
+                                             order by rand() limit 1
+                                       )
+                                    END
+                                            )
+                              ELSE (
+                                    CASE MOD((
+                                    SELECT IFNULL(MAX(SC_SEQ), 0) + 1 
+                                    FROM tr_schedule a 
+                                    WHERE a.TR_SEQ = #{trSeq}), 4)
+                                                WHEN '0'
+                                                THEN (
+                                          SELECT P_SEQ
+                                             FROM PLACE
+                                             WHERE P_CATEGORY = 'cafe'
+                                             AND P_AREA = #{trAreaSet}
+                                                            AND P_SEQ NOT IN (SELECT IFNULL(b.P_SEQ, 0) FROM tr_schedule b where b.tr_seq = #{trSeq})
+                                                            order by rand() limit 1
+                                       )
+                                    ELSE (
+                                          SELECT P_SEQ
+                                             FROM PLACE
+                                             WHERE P_CATEGORY = 'restaurant'
+                                             AND P_AREA = #{trAreaSet}
+                                                            AND P_SEQ NOT IN (SELECT IFNULL(b.P_SEQ, 0) FROM tr_schedule b where b.tr_seq = #{trSeq})
+                                                            order by rand() limit 1
+                                       )
+                                    END
+                                 )
+                            END                                     
+                     )
+                  )
+                   ]]>
+	</insert>
+
+	<!-- 다시 굴리기 버튼 활성화를 위한 데이터 검색 -->
+	<select id="selectTripSchedule">
+		SELECT IFNULL(MAX(SC_SEQ), 0)
+		FROM tr_schedule a
+		WHERE
+		a.TR_SEQ = #{trSeq};
+	</select>
+
+	<delete id="deleteTripSchedule">
+		DELETE FROM TR_SCHEDULE
+		WHERE TR_SEQ = #{trSeq}
+	</delete>
+
+
+	<!-- 스케쥴 정보 가져오기 -->
+	<!-- 일반모드, 랜덤 추천모드에서 -->
+	<select id="getscheduleList" resultType="HashMap">
+		SELECT
+		a.SC_SEQ as scSeq
+		,a.TR_SEQ as trSeq
+		,a.P_SEQ as pSeq
+		,b.P_CATEGORY as pCategory
+		,b.P_NAME
+		as pName
+		,b.P_ADDRESS as pAddress
+		,b.P_TELL as pTell
+		,b.P_INFO as pInfo
+		,b.originalFileName as originalFileName
+		from tr_schedule as a, place as
+		b
+		where a.P_SEQ = b.P_SEQ
+		AND TR_SEQ = #{trSeq}
+	</select>
+
+	<!-- 1209 남주 추가 -->
+	<!-- 스케쥴 정보 가져오기 -->
+	<!-- 게임모드에서 -->
+	<select id="getClearedscheduleList" resultType="HashMap">
+		SELECT
+		a.SC_SEQ as
+		scSeq
+		,a.TR_SEQ as trSeq
+		,a.P_SEQ as pSeq
+		,a.TR_STATUS AS trStatus
+		,a.TR_CLEAR_FILENAME AS trClearFilename
+		,b.P_CATEGORY as pCategory
+		,b.P_NAME as pName
+		,b.P_ADDRESS as pAddress
+		,b.P_TELL as pTell
+		,b.P_INFO
+		as pInfo
+		,b.originalFileName as originalFileName
+		from tr_schedule as a,
+		place as b
+		where a.P_SEQ =b.P_SEQ
+		AND TR_SEQ = #{trSeq}
+		AND A.TR_STATUS
+		IS NOT NULL
+	</select>
+
+	<!-- 1209 남주 추가 -->
+	<!-- 보여줄 스케쥴 하나씩만 가져오기 -->
+	<select id="addGameModeSchedule" resultType="HashMap">
+		SELECT
+		a.SC_SEQ as
+		scSeq
+		,a.TR_SEQ as trSeq
+		,a.P_SEQ as pSeq
+		,a.TR_STATUS AS trStatus
+		,b.P_CATEGORY as pCategory
+		,b.P_NAME as pName
+		,b.P_ADDRESS as pAddress
+		,b.P_TELL as pTell
+		,b.P_INFO as pInfo
+		,b.originalFileName as
+		originalFileName
+		from tr_schedule as a, place as b
+		where a.P_SEQ
+		=b.P_SEQ
+		AND TR_SEQ = #{trSeq}
+		AND A.SC_SEQ = (
+		SELECT MIN(C.SC_SEQ)
+		FROM
+		TR_SCHEDULE C
+		WHERE C.TR_SEQ = #{trSeq}
+		AND C.TR_STATUS IS NULL
+		)
+	</select>
+
+	<!-- 1209 남주 추가 -->
+	<!-- 클리어 파일 업로드하고 상태 클리어로 바꿔주기 -->
+	<update id="updateClearTrschedule" parameterType="schedule">
+		UPDATE
+		TR_SCHEDULE
+		SET
+		tr_status = 1,
+		TR_CLEAR_FILENAME = #{trClearFilename}
+		WHERE SC_SEQ = #{scSeq}
+		AND TR_SEQ = #{trSeq}
+	</update>
+
+	<!-- 1210 남주 추가 -->
+	<!-- 장소 보기 선택하면 상태를 0으로 바꿔줌 -->
+	<!-- null, 0 : 장소보기 선택후 미션 수행중 1: 클리어 -->
+	<update id="updateTrStatus" parameterType="schedule">
+		UPDATE TR_SCHEDULE
+		SET
+		TR_STATUS = 0
+		WHERE TR_SEQ = #{trSeq}
+		AND SC_SEQ = (
+		SELECT SEQ
+		FROM
+		(
+		SELECT MIN(A.SC_SEQ) AS SEQ
+		FROM randomjeju.TR_SCHEDULE A
+		WHERE A.TR_SEQ
+		= #{trSeq}
+		AND A.TR_STATUS IS NULL
+		) tmp
+		)
+	</update>
+
+	<!-- 내가 참여한 방 보기 -->
+
+	<select id="getMyTripList" parameterType="int"
+		resultType="HashMap">
+    <![CDATA[
+               SELECT 
+          a.TM_SEQ as tmSeq
+        , a.TR_SEQ as trSeq
+        , a.M_SEQ as mSeq
+        , a.TM_ROLE as tmRole
+        , a.TM_NAME as tmName
+        , a.TM_ID as tmId
+        
+        , b.TR_SEQ as trSeq
+      , b.TR_NAME as trName
+      , b.TR_MODE as trMode
+      , b.TR_AREA_SET as trAreaSet
+      , b.TR_DATE_SET as trDateSet
+      , b.TR_STEPS as trSteps
+      , b.TR_STEP_STATUS as trStepStatus
+      , b.TR_GENDER_SET as trGenderSet
+      , b.TR_PERSONNEL_SET as trPersonnelSet
+      , b.TR_LICENSE_SET as trLicenseSet
+      , b.TR_TRANSPORTATION_SET as trTransprotationSet
+      , b.TR_PASSWORD_SET as trPasswordSet
+      , b.TR_INTRO as trIntro
+      , b.TR_IMG_NAME as trImgName
+      , b.TR_IMG_PATH as trImgPath
+      , b.TR_STATUS as trStatus
+   
+        from trip_members as a , trip as b 
+        WHERE b.TR_SEQ = a.TR_SEQ
+       
+        and a.M_SEQ = #{mSeq}
+        
+           ORDER BY TR_STATUS DESC;
+        
+         
+        ]]>
+	</select>
+
+	<select id="getMyTripMember" resultType="HashMap">
+    <![CDATA[
+      select * 
+      from trip_members as a , 
+            tr_schedule as c 
+      where a.TR_SEQ = c.TR_SEQ 
+         and a.TR_SEQ = #{trSeq} 
+         and SC_SEQ = 1
+        ]]>
+	</select>
+
+	<select id="getMyTripPlace" resultType="HashMap">
+    <![CDATA[
+      select * 
+      from place as a , 
+         tr_schedule as c 
+      where a.P_SEQ = c.P_SEQ 
+         and c.TR_SEQ = {}
+        ]]>
+	</select>
 </mapper>
 

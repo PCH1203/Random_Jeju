@@ -100,7 +100,7 @@ input[type], textarea, select, .imgup {
         <!--end of modal-container-->
         <div class="main-container transition--fade">
             <section class="cover cover-12 form--dark imagebg height-100 parallax"
-         data-overlay="4" style="height: 160vh;">
+         data-overlay="4" style="height: 130vh;">
          <div class="background-image-holder" style="height: inherit;">
             <img alt="image" src="img/pch_img_1.jpg" />
          </div>
@@ -112,6 +112,14 @@ input[type], textarea, select, .imgup {
                            ${memberInfo.mId}</c:if>
                      <br>회원정보 수정
                   </h2>
+                  
+                     <div>
+	                     <form action="getMembPw.do" method="POST">
+	                     	<button class="btn " style="background-color: rgba(0, 0, 0, 0.01);" >
+	                     		<h4 style="margin-bottom: 0em">비밀번호 변경하기</h4>
+	                     	</button>
+                     	</form>
+                     </div>
 
                   <!--end of modal instance-->
                </div>
@@ -120,8 +128,7 @@ input[type], textarea, select, .imgup {
                      class="form-subscribe-1 bg--white text-center box-shadow-wide"
                      style="margin-right: none; background-color: rgba(255, 255, 255, 0.8); padding: 2em;">
                      <h4 style="margin-bottom: 0.5em;">회원정보 수정</h4>
-
-
+                     
                      <form class="" action="updateMember.do" method="post"
                         id="subForm" enctype="multipart/form-data">
                         <input type="hidden" name="mId" value="${memberInfo.mId }">
@@ -145,11 +152,7 @@ input[type], textarea, select, .imgup {
                               name="mEmail" type="text" value="${memberInfo.mEmail}"
                               style="height: 60%;" />
                         </div>
-                        <div class="input-with-icon col-md-6">
-                           <label for="changePassword">비밀번호 </label> <input
-                              id="changePassword" name="mPassword" type="text"
-                              value="${memberInfo.mPassword}" style="height: 60%;" />
-                        </div>
+                        
                         <div class="input-with-icon col-md-6">
                            <label for="changetell">전화번호</label> <input id="changetell"
                               name="mTell" type="text" value="${memberInfo.mTell}"
@@ -189,10 +192,12 @@ input[type], textarea, select, .imgup {
                            </div>
                            <input type="submit" value="변경하기" class="btn"
                               style="background-color: steelblue;'">
-                           <div class="modal-instance col-md-12" style="padding-top: 10px">
+                           <div class="modal-instance col-md-12" style="padding-top: 10px;" >
                               <a class="modal-trigger col-md-12" href="#"
                                  style="padding-right: 32px; position: relative; text-align: -webkit-center; font-size: 0.25em;">
                                  회원 탈퇴 </a>
+                                  
+                               
 
                               <div class="modal-container">
                                  <div class="modal-content bg--white height--natural">

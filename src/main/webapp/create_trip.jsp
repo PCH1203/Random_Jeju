@@ -109,12 +109,23 @@
 
 
     <div class="main-container transition--fade">
-        <section class="height-100 cover cover-8" style="height: 80em;">
+        <section class="height-100 cover cover-8" style="height: 90em;">
             <div class="col-md-7 col-sm-5">
                 <div class="background-image-holder">
-                    <div class=" " style="margin-top: 20vh; text-align: center;">
+                 
+                     <div>
+	                     	<button class="btn " onclick="location.href='choose_join.jsp'"
+	                     	
+	                     	style="background-color: rgba(0, 0, 0, 0.01); margin:13vh 0 0 5vh  " >
+	                     		<h4 style="margin-bottom: 0em;color: white">나가기</h4>
+	                     	</button>
+                     </div>
+                        <div class=" " style="margin-top: 20vh; text-align: center;">
                         <h3 style="color: white">여행 만들기</h3>
+               
                     </div>
+                    
+                    
                     <img alt="image" src="img/pch_img_7.png" />
                 </div>
             </div>
@@ -197,10 +208,10 @@
                                     <div class="input-with-icon">
                                         <label>지역</label> <select name="trAreaSet" id="areaSet">
                                             <option value="">-선택-</option>
-                                            <option value="동">동</option>
-                                            <option value="서">서</option>
-                                            <option value="남">남</option>
-                                            <option value="북">북</option>
+                                            <option value="east">동</option>
+                                            <option value="west">서</option>
+                                            <option value="south">남</option>
+                                            <option value="north">북</option>
                                         </select>
                                     </div>
                                 </div>
@@ -232,9 +243,8 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="input-with-icon">
-                                        <label>성별</label> <select name="trGenderSet" id="date">
-                                            <option value="">-선택-</option>
-                                            <option value="X">무관</option>
+                                        <label>성별</label> <select name	="trGenderSet" id="date">
+                                           <option value="X" selected="selected">-무관-</option>
                                             <option value="M">남</option>
                                             <option value="F">여</option>
                                         </select>
@@ -243,7 +253,7 @@
                                 <div class="col-sm-4">
                                     <div class="input-with-icon">
                                         <label>이동수단</label> <select name="trTransportationSet" id="date">
-                                            <option value="">-선택-</option>
+                                            <option value="X" selected="selected">-무관-</option>
                                             <option value="자동차">자동차</option>
                                             <option value="바이크">바이크</option>
                                             <option value="자전거">자전거</option>
@@ -254,8 +264,7 @@
                                 <div class="col-sm-4">
                                     <div class="input-with-icon">
                                         <label>운전면허</label> <select name="trLicenseSet" id="licenseSet">
-                                            <option value="">-선택-</option>
-                                            <option value="X">무관</option>
+                                            <option value="X" selected="selected">-무관-</option>
                                             <option value="Y">유</option>
                                             <option value="N">무</option>
                                         </select>
@@ -353,7 +362,7 @@
             function fnCalCount(type, ths) {
                 var $input = $(ths).parents("div").find("input[name='trPersonnelSet']");
                 var tCount = Number($input.val());
-                var maxNum = 10;
+                var maxNum = 5;
                 var minNum = 2;
                 
                 // +/- 버튼 구동 제약
