@@ -1,7 +1,7 @@
 # Random Jeju (제주의 온도) 
 
 
-🎞️<a href = "https://www.youtube.com/watch?v=CrMlff0BLYs&t=3s">프로젝트 시연 영상</a>
+🎞️<a href = "https://www.youtube.com/watch?v=CrMlff0BLYs&t=3s">프로젝트 시연 영상 보기</a>
 
 
 ![index_1](https://user-images.githubusercontent.com/87962947/156979898-d8ec7505-b813-443b-b90d-1d581684c69e.png)
